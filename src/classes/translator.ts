@@ -35,9 +35,10 @@ export default class Translator {
 
       var selector = '${this.selector}'
       // Wait for the element to be loaded
-      setInterval(() => {
+      var interval = setInterval(() => {
         var result = document.querySelector(selector)
-        if(result) {
+        if(result && result.innerText) {
+          clearInterval(interval)
           window.ReactNativeWebView.postMessage(result.innerText)
         }
         else {

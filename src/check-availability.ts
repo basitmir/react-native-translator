@@ -17,8 +17,7 @@ const output2 = /이름/;
 
 (async () => {
   const browser = await puppeteer.launch({
-    // @ts-ignore
-    headless: 'new',
+    headless: true,
     args: [
       '--no-sandbox',
       '--disable-setuid-sandbox',
@@ -35,14 +34,22 @@ const output2 = /이름/;
     const selector = translator.selector;
 
     const page = await browser.newPage();
-    await page.goto(url);
+    await page.goto(url, {waitUntil: 'domcontentloaded', timeout: 60000});
 
     let count = 0;
     const maxCount = 10;
     const delay = 1000;
     async function validate() {
       try {
-        const element = await page.waitForSelector(selector);
+        await page.waitForFunction(
+          (sel: string) => {
+            const el = document.querySelector(sel);
+            return el && (el as HTMLElement).innerText.trim().length > 0;
+          },
+          {timeout: 30000},
+          selector,
+        );
+        const element = await page.$(selector);
         if (!element) {
           throw new Error('Selector is not valid');
         }
@@ -66,9 +73,11 @@ const output2 = /이름/;
     }
 
     await validate();
+    console.log(`✅ ${translator.selector} — OK`);
 
     await page.close();
   }
 
+  console.log('\n✅ All translators available');
   await browser.close();
 })();

@@ -13,7 +13,7 @@ const beforeTranslate = `
 const googleTranslator = new Translator(
   {
     lanaugeCodes,
-    selector: 'c-wiz[role] > div > div[jsaction] > div > div',
+    selector: 'div[dir] > span[lang]',
     toUrl: (from, to, value) =>
       `https://translate.google.com/?sl=${from}&tl=${to}&text=${encodeURI(
         value,

@@ -32,11 +32,15 @@ function Translator<T extends TranslatorType = 'google'>(
 
   const onMessage = useCallback((event: WebViewMessageEvent) => {
     const result = event.nativeEvent.data;
-    if (!result || result === LOADING_MESSSAGE || result === 'Enter a URL') {
+    if (
+      !result ||
+      result === LOADING_MESSSAGE ||
+      result.includes('Enter a URL')
+    ) {
       return;
     }
     onTranslated(result);
-  }, []);
+  }, [onTranslated]);
 
   // set value throttled
   const throttledSetValue = useMemo(() => _.debounce(setValue, 100), []);
