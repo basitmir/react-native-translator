@@ -1,0 +1,16 @@
+import Translator from '../../classes/translator';
+import lanaugeCodes from './languageCode';
+// EU cache policy agreement modal pass code
+const beforeTranslate = `
+  setTimeout(() => {
+    try {
+      document.querySelectorAll("form > div[data-is-touch-wrapper] > button")[1].click();
+    } catch(e) { }
+  }, 500)
+`;
+const googleTranslator = new Translator({
+    lanaugeCodes,
+    selector: 'div[dir] > span[lang]',
+    toUrl: (from, to, value) => `https://translate.google.com/?sl=${from}&tl=${to}&text=${encodeURI(value)}`,
+}, { beforeTranslate });
+export default googleTranslator;
